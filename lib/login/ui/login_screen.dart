@@ -2,6 +2,7 @@ import 'package:app_crud_getx/login/ui/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import '../../routes/app_routes.dart';
 import '../controller/login_controller.dart';
@@ -15,94 +16,43 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final controller = LoginController();
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  initState() {
-    super.initState();
-    controller.loadSavedLogin();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void _onLoginPressed() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final success = await controller.login();
-      if (!mounted) return;
-      if (success) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.home, (route) => false);
-      } else {
-        _showErrorDialog("Thông tin đăng nhập không hợp lệ");
-      }
-    }
-  }
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text(
-          "Lỗi",
-          style: TextStyle(fontSize: 30),
-        ),
-        content: Text(
-          message,
-          style: const TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            style: TextButton.styleFrom(
-              backgroundColor: const Color(0xFFf24e1e),
-              foregroundColor: Colors.white,
-            ),
-            child: const Text(
-              "Close",
-              style: TextStyle(fontSize: 16),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<LoginController>();
+    final formKey = GlobalKey<FormState>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Form(
-            key: _formKey,
-            child: _buildBodyPage(),
+            key: formKey,
+            child: _buildBodyPage(controller, formKey),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildBodyPage() {
+  Widget _buildBodyPage(
+    LoginController controller,
+    GlobalKey<FormState> formKey,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildIconLogo(),
         const SizedBox(height: 24),
-        _buildTaxCode(),
+        _buildTaxCode(controller),
         const SizedBox(height: 24),
-        _buildUserName(),
+        _buildUserName(controller),
         const SizedBox(height: 24),
-        _buildPassword(),
+        _buildPassword(controller),
         const SizedBox(height: 30),
-        _buttonLogin(),
+        _buttonLogin(controller, formKey),
         const SizedBox(height: 200),
         _buildBottom(),
-        SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+        SizedBox(height: Get.mediaQuery.padding.bottom + 20),
       ],
     );
   }
@@ -118,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildTaxCode() {
+  Widget _buildTaxCode(LoginController controller) {
     return InputField(
       label: "Mã số thuế",
       controller: controller.taxController,
@@ -137,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildUserName() {
+  Widget _buildUserName(LoginController controller) {
     return InputField(
         label: "Tài khoản",
         controller: controller.usernameController,
@@ -151,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
-  Widget _buildPassword() {
+  Widget _buildPassword(LoginController controller) {
     return InputField(
       label: "Mật khẩu",
       controller: controller.passwordController,
@@ -169,34 +119,79 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buttonLogin() {
+  Widget _buttonLogin(
+      LoginController controller, GlobalKey<FormState> formKey) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: 400,
         height: 60,
-        child: ElevatedButton(
-          onPressed: () {
-            _onLoginPressed();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFf24e1e),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+        child: Obx(
+          () => ElevatedButton(
+            onPressed: controller.isLoading.value
+                ? null
+                : () => _onLoginPressed(controller, formKey),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFf24e1e),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-          ),
-          child: const Text(
-            "Đăng nhập",
-            style: TextStyle(
-              fontSize: 16,
-              height: 1.5,
-              fontWeight: FontWeight.w600,
-            ),
+            child: controller.isLoading.value
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFf24e1e),
+                    ),
+                  )
+                : const Text(
+                    "Đăng nhập",
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 1.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
           ),
         ),
       ),
     );
+  }
+
+  void _onLoginPressed(
+      LoginController controller, GlobalKey<FormState> formKey) async {
+    if (formKey.currentState?.validate() ?? false) {
+      final success = await controller.login();
+      if (!mounted) return;
+      if (success) {
+        Get.offAllNamed(Routes.home);
+      } else {
+        Get.defaultDialog(
+          title: "Lỗi",
+          middleText: controller.errorMessage.value,
+          backgroundColor: Colors.white,
+          titleStyle: const TextStyle(color: Color(0xFFf24e1e)),
+          middleTextStyle: const TextStyle(color: Color(0xFFf24e1e)),
+          radius: 15,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xFFf24e1e),
+              ),
+              child: const Text(
+                "Đóng",
+              ),
+            ),
+          ],
+        );
+      }
+    }
   }
 
   Widget _buildBottom() {

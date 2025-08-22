@@ -1,6 +1,7 @@
+import 'package:app_crud_getx/login/controller/login_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../login/controller/login_controller.dart';
 import '../../routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,20 +12,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _controller = LoginController();
-
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<LoginController>();
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Trang chủ"),
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            _controller.logout();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.login,
-              (route) => false,
-            );
+            controller.logout();
+            Get.offAllNamed(Routes.login);
           },
           child: const Text("Đăng xuất"),
         ),

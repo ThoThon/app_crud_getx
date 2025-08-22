@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../home/ui/home_screen.dart';
+import '../login/binding/login_binding.dart';
 import '../login/ui/login_screen.dart';
 import 'app_routes.dart';
 
 class AppPages {
-  static Map<String, WidgetBuilder> routes = {
-    Routes.login: (context) => const LoginScreen(),
-    Routes.home: (context) => const HomeScreen(),
-  };
+  static List<GetPage> routes = [
+    GetPage(
+      name: Routes.login,
+      page: () => const LoginScreen(),
+      binding: LoginBinding(),
+    ),
+    GetPage(
+      name: Routes.home,
+      page: () => const HomeScreen(),
+    ),
+  ];
 }
