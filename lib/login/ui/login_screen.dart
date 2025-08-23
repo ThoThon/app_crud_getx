@@ -8,36 +8,25 @@ import '../../routes/app_routes.dart';
 import '../controller/login_controller.dart';
 import 'widgets/footer_button.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends GetView<LoginController> {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  @override
   Widget build(BuildContext context) {
-    final controller = Get.find<LoginController>();
-    final formKey = GlobalKey<FormState>();
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Form(
-            key: formKey,
-            child: _buildBodyPage(controller, formKey),
+            key: controller.formKey,
+            child: _buildBodyPage(controller),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildBodyPage(
-    LoginController controller,
-    GlobalKey<FormState> formKey,
-  ) {
+  Widget _buildBodyPage(LoginController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 24),
         _buildPassword(controller),
         const SizedBox(height: 30),
-        _buttonLogin(controller, formKey),
+        _buttonLogin(controller),
         const SizedBox(height: 200),
         _buildBottom(),
         SizedBox(height: Get.mediaQuery.padding.bottom + 20),
@@ -119,8 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buttonLogin(
-      LoginController controller, GlobalKey<FormState> formKey) {
+  Widget _buttonLogin(LoginController controller) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
@@ -130,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
           () => ElevatedButton(
             onPressed: controller.isLoading.value
                 ? null
-                : () => _onLoginPressed(controller, formKey),
+                : () => _onLoginPressed(controller),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFf24e1e),
               foregroundColor: Colors.white,
@@ -160,11 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _onLoginPressed(
-      LoginController controller, GlobalKey<FormState> formKey) async {
-    if (formKey.currentState?.validate() ?? false) {
+  void _onLoginPressed(LoginController controller) async {
+    if (controller.formKey.currentState?.validate() ?? false) {
       final success = await controller.login();
-      if (!mounted) return;
+
       if (success) {
         Get.offAllNamed(Routes.home);
       } else {

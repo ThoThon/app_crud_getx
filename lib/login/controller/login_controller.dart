@@ -5,6 +5,8 @@ import '../../models/login/login_info.dart';
 import '../../models/login/login_storage.dart';
 
 class LoginController extends GetxController {
+  final formKey = GlobalKey<FormState>();
+
   final TextEditingController taxController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -51,10 +53,6 @@ class LoginController extends GetxController {
     errorMessage.value = "Thông tin đăng nhập không hợp lệ";
     isLoading.value = false;
     return false;
-  }
-
-  Future<void> logout() async {
-    await LoginStorage.clearLoginInfo();
   }
 
   @override
