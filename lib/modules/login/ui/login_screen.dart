@@ -19,26 +19,26 @@ class LoginScreen extends GetView<LoginController> {
         child: SafeArea(
           child: Form(
             key: controller.formKey,
-            child: _buildBodyPage(controller),
+            child: _buildBodyPage(),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildBodyPage(LoginController controller) {
+  Widget _buildBodyPage() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildIconLogo(),
         const SizedBox(height: 24),
-        _buildTaxCode(controller),
+        _buildTaxCode(),
         const SizedBox(height: 24),
-        _buildUserName(controller),
+        _buildUserName(),
         const SizedBox(height: 24),
-        _buildPassword(controller),
+        _buildPassword(),
         const SizedBox(height: 30),
-        _buttonLogin(controller),
+        _buttonLogin(),
         const SizedBox(height: 200),
         _buildBottom(),
         SizedBox(height: Get.mediaQuery.padding.bottom + 20),
@@ -57,7 +57,7 @@ class LoginScreen extends GetView<LoginController> {
     );
   }
 
-  Widget _buildTaxCode(LoginController controller) {
+  Widget _buildTaxCode() {
     return InputField(
       label: "Mã số thuế",
       controller: controller.taxController,
@@ -76,7 +76,7 @@ class LoginScreen extends GetView<LoginController> {
     );
   }
 
-  Widget _buildUserName(LoginController controller) {
+  Widget _buildUserName() {
     return InputField(
         label: "Tài khoản",
         controller: controller.usernameController,
@@ -90,7 +90,7 @@ class LoginScreen extends GetView<LoginController> {
         });
   }
 
-  Widget _buildPassword(LoginController controller) {
+  Widget _buildPassword() {
     return InputField(
       label: "Mật khẩu",
       controller: controller.passwordController,
@@ -108,7 +108,7 @@ class LoginScreen extends GetView<LoginController> {
     );
   }
 
-  Widget _buttonLogin(LoginController controller) {
+  Widget _buttonLogin() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
@@ -116,9 +116,8 @@ class LoginScreen extends GetView<LoginController> {
         height: 60,
         child: Obx(
           () => ElevatedButton(
-            onPressed: controller.isLoading.value
-                ? null
-                : () => _onLoginPressed(controller),
+            onPressed:
+                controller.isLoading.value ? null : () => _onLoginPressed(),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFf24e1e),
               foregroundColor: Colors.white,
@@ -148,7 +147,7 @@ class LoginScreen extends GetView<LoginController> {
     );
   }
 
-  void _onLoginPressed(LoginController controller) async {
+  void _onLoginPressed() async {
     if (controller.formKey.currentState?.validate() ?? false) {
       final success = await controller.login();
 

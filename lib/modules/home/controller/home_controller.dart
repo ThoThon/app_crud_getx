@@ -8,6 +8,12 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  var currentIndex = 0.obs;
+
+  void changeTab(int index) {
+    currentIndex.value = index;
+  }
+
   Future<void> logout() async {
     await LoginStorage.clearLoginInfo();
   }
