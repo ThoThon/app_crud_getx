@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
-import '../home/binding/home_binding.dart';
-import '../home/ui/home_screen.dart';
-import '../login/binding/login_binding.dart';
-import '../login/ui/login_screen.dart';
+import '../modules/home/binding/home_binding.dart';
+import '../modules/home/ui/home_screen.dart';
+import '../modules/login/binding/login_binding.dart';
+import '../modules/login/ui/login_screen.dart';
 import 'app_routes.dart';
 
 class AppPages {

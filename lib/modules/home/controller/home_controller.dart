@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../models/login/login_storage.dart';
+import '../../login/models/login/login_storage.dart';
 
 class HomeController extends GetxController {
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../routes/app_routes.dart';
 import '../../home/controller/home_controller.dart';
-import '../../routes/app_routes.dart';
 
 class ProfileScreen extends GetView<HomeController> {
   const ProfileScreen({super.key});

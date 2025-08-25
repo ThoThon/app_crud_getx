@@ -1,10 +1,10 @@
-import 'package:app_crud_getx/login/ui/widgets/input_field.dart';
+import 'package:app_crud_getx/modules/login/ui/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-import '../../routes/app_routes.dart';
+import '../../../routes/app_routes.dart';
 import '../controller/login_controller.dart';
 import 'widgets/footer_button.dart';
 
@@ -158,8 +158,8 @@ class LoginScreen extends GetView<LoginController> {
           title: "Lỗi",
           middleText: controller.errorMessage.value,
           backgroundColor: Colors.white,
-          titleStyle: const TextStyle(color: Color(0xFFf24e1e)),
-          middleTextStyle: const TextStyle(color: Color(0xFFf24e1e)),
+          titleStyle: const TextStyle(color: Colors.black),
+          middleTextStyle: const TextStyle(color: Colors.black),
           radius: 15,
           actions: [
             TextButton(
