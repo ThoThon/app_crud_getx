@@ -1,10 +1,9 @@
-import 'package:app_crud_getx/modules/login/ui/widgets/input_field.dart';
+import 'package:app_crud_getx/features/login/ui/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-import '../../../routes/app_routes.dart';
 import '../controller/login_controller.dart';
 import 'widgets/footer_button.dart';
 
@@ -117,7 +116,7 @@ class LoginScreen extends GetView<LoginController> {
         child: Obx(
           () => ElevatedButton(
             onPressed:
-                controller.isLoading.value ? null : () => _onLoginPressed(),
+                controller.isLoading.value ? null : controller.onLoginPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFf24e1e),
               foregroundColor: Colors.white,
@@ -145,39 +144,6 @@ class LoginScreen extends GetView<LoginController> {
         ),
       ),
     );
-  }
-
-  void _onLoginPressed() async {
-    if (controller.formKey.currentState?.validate() ?? false) {
-      final success = await controller.login();
-
-      if (success) {
-        Get.offAllNamed(Routes.home);
-      } else {
-        Get.defaultDialog(
-          title: "Lỗi",
-          middleText: controller.errorMessage.value,
-          backgroundColor: Colors.white,
-          titleStyle: const TextStyle(color: Colors.black),
-          middleTextStyle: const TextStyle(color: Colors.black),
-          radius: 15,
-          actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xFFf24e1e),
-              ),
-              child: const Text(
-                "Đóng",
-              ),
-            ),
-          ],
-        );
-      }
-    }
   }
 
   Widget _buildBottom() {
