@@ -1,8 +1,9 @@
-import 'package:app_crud_getx/services/hive_storage.dart';
+import 'package:app_crud_getx/services/local/hive_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'models/login/login_storage.dart';
+import 'features/login/models/login_storage.dart';
 import 'routes/app_pages.dart';
 import 'routes/app_routes.dart';
 
@@ -22,12 +23,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoSansTextTheme(),
       ),
       initialRoute: initialRoute,
-      routes: AppPages.routes,
+      getPages: AppPages.routes,
     );
   }
 }

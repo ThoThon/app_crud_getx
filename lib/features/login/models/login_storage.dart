@@ -16,7 +16,27 @@ class LoginStorage {
     return _box.get(keyUserLogin);
   }
 
+  static String? getToken() {
+    final info = getLoginInfo();
+    return info?.token;
+  }
+
+  // Chỉ xóa token, giữ lại thông tin form
   static Future<void> clearLoginInfo() async {
+    final currentInfo = getLoginInfo();
+    if (currentInfo != null) {
+      final formInfo = LoginInfo(
+        username: currentInfo.username,
+        password: currentInfo.password,
+        taxCode: currentInfo.taxCode,
+        token: '',
+      );
+      await _box.put(keyUserLogin, formInfo);
+    }
+  }
+
+  // Xóa hoàn toàn tất cả thông tin
+  static Future<void> clearAllInfo() async {
     await _box.delete(keyUserLogin);
   }
 
@@ -25,6 +45,7 @@ class LoginStorage {
     return info != null &&
         info.username.trim().isNotEmpty &&
         info.password.trim().isNotEmpty &&
-        info.taxCode.trim().isNotEmpty;
+        info.taxCode.trim().isNotEmpty &&
+        info.token.trim().isNotEmpty;
   }
 }

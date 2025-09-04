@@ -1,76 +1,14 @@
-import 'package:app_crud_getx/login/ui/widgets/input_field.dart';
+import 'package:app_crud_getx/features/login/ui/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
-import '../../routes/app_routes.dart';
 import '../controller/login_controller.dart';
 import 'widgets/footer_button.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends GetView<LoginController> {
   const LoginScreen({super.key});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final controller = LoginController();
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  initState() {
-    super.initState();
-    controller.loadSavedLogin();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void _onLoginPressed() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final success = await controller.login();
-      if (!mounted) return;
-      if (success) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.home, (route) => false);
-      } else {
-        _showErrorDialog("Thông tin đăng nhập không hợp lệ");
-      }
-    }
-  }
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text(
-          "Lỗi",
-          style: TextStyle(fontSize: 30),
-        ),
-        content: Text(
-          message,
-          style: const TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            style: TextButton.styleFrom(
-              backgroundColor: const Color(0xFFf24e1e),
-              foregroundColor: Colors.white,
-            ),
-            child: const Text(
-              "Close",
-              style: TextStyle(fontSize: 16),
-            ),
-          )
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Form(
-            key: _formKey,
+            key: controller.formKey,
             child: _buildBodyPage(),
           ),
         ),
@@ -102,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _buttonLogin(),
         const SizedBox(height: 200),
         _buildBottom(),
-        SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+        SizedBox(height: Get.mediaQuery.padding.bottom + 20),
       ],
     );
   }
@@ -175,24 +113,33 @@ class _LoginScreenState extends State<LoginScreen> {
       child: SizedBox(
         width: 400,
         height: 60,
-        child: ElevatedButton(
-          onPressed: () {
-            _onLoginPressed();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFf24e1e),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+        child: Obx(
+          () => ElevatedButton(
+            onPressed:
+                controller.isLoading.value ? null : controller.onLoginPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFf24e1e),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-          ),
-          child: const Text(
-            "Đăng nhập",
-            style: TextStyle(
-              fontSize: 16,
-              height: 1.5,
-              fontWeight: FontWeight.w600,
-            ),
+            child: controller.isLoading.value
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFf24e1e),
+                    ),
+                  )
+                : const Text(
+                    "Đăng nhập",
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 1.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
           ),
         ),
       ),
