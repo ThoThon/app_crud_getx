@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import '../../../repositories/product_repository.dart';
 import '../models/product_model.dart';
@@ -6,58 +8,139 @@ import '../models/product_model.dart';
 class MainpageController extends GetxController {
   var products = <Product>[].obs;
   var isLoading = false.obs;
-  var hasMore = true.obs;
-  var page = 1;
+
+  // Pagination
+  var currentPage = 1;
+  var hasMoreData = true.obs;
+  final int pageSize = 10;
+
+  late RefreshController refreshController;
 
   @override
   void onInit() {
     super.onInit();
-    fetchProducts();
+    refreshController = RefreshController(initialRefresh: false);
+    fetchProducts(isInitial: true);
   }
 
-  Future<void> fetchProducts({bool refresh = false}) async {
-    if (isLoading.value) return;
+  @override
+  void onClose() {
+    refreshController.dispose();
+    super.onClose();
+  }
 
-    if (refresh) {
-      page = 1;
-      products.clear();
-      hasMore.value = true;
+  /// Lấy danh sách sản phẩm
+  Future<void> fetchProducts({bool isInitial = false}) async {
+    if (isInitial) {
+      isLoading.value = true;
+      currentPage = 1;
+      hasMoreData.value = true;
     }
 
-    if (!hasMore.value && !refresh) return;
-
-    isLoading.value = true;
     try {
-      final List<Product> newProducts;
+      final result = await ProductRepository.getProducts(
+        page: currentPage,
+        size: pageSize,
+      );
 
-      if (refresh) {
-        newProducts = await ProductRepository.refreshProducts();
+      if (isInitial) {
+        products.assignAll(result.products);
       } else {
-        newProducts = await ProductRepository.loadMoreProducts(page: page);
+        products.addAll(result.products);
       }
 
-      if (refresh) {
-        products.assignAll(newProducts);
-      } else {
-        products.addAll(newProducts);
+      hasMoreData.value = result.hasMore;
+      if (result.products.isNotEmpty) {
+        currentPage++;
       }
-
-      if (newProducts.length < 10) {
-        hasMore.value = false;
-      }
-
-      page++;
     } catch (e) {
       print("Lỗi fetchProducts: $e");
-      hasMore.value = false;
+      _showErrorSnackbar("Có lỗi xảy ra khi tải dữ liệu");
     } finally {
-      isLoading.value = false;
+      if (isInitial) {
+        isLoading.value = false;
+      }
     }
   }
 
-  void loadMore() {
-    if (!isLoading.value && hasMore.value) {
-      fetchProducts();
+  /// Pull to refresh
+  Future<void> onRefresh() async {
+    try {
+      currentPage = 1;
+      hasMoreData.value = true;
+
+      final result = await ProductRepository.getProducts(
+        page: 1,
+        size: pageSize,
+      );
+
+      products.assignAll(result.products);
+      hasMoreData.value = result.hasMore;
+
+      if (result.products.isNotEmpty) {
+        currentPage = 2;
+      }
+
+      refreshController.resetNoData();
+      refreshController.refreshCompleted();
+    } catch (e) {
+      print("Lỗi onRefresh: $e");
+      refreshController.refreshFailed();
+      _showErrorSnackbar("Không thể làm mới dữ liệu");
     }
+  }
+
+  /// Load more
+  Future<void> onLoadMore() async {
+    if (!hasMoreData.value) {
+      refreshController.loadNoData();
+      return;
+    }
+
+    try {
+      final result = await ProductRepository.getProducts(
+        page: currentPage,
+        size: pageSize,
+      );
+
+      if (result.products.isNotEmpty) {
+        products.addAll(result.products);
+        currentPage++;
+        refreshController.loadComplete();
+      }
+
+      hasMoreData.value = result.hasMore;
+      if (!result.hasMore) {
+        refreshController.loadNoData();
+      }
+    } catch (e) {
+      print("Lỗi onLoadMore: $e");
+      refreshController.loadFailed();
+      _showErrorSnackbar("Không thể tải thêm dữ liệu");
+    }
+  }
+
+  /// Cập nhật sản phẩm trong danh sách local
+  void updateProductInList(Product updatedProduct) {
+    final index = products.indexWhere((p) => p.id == updatedProduct.id);
+    if (index != -1) {
+      products[index] = updatedProduct;
+    }
+  }
+
+  /// Xóa sản phẩm khỏi danh sách local
+  void removeProductFromList(int productId) {
+    products.removeWhere((product) => product.id == productId);
+  }
+
+  void _showErrorSnackbar(String message) {
+    Get.snackbar(
+      "Lỗi",
+      message,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.TOP,
+      duration: const Duration(seconds: 3),
+    );
   }
 }

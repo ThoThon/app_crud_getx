@@ -2,8 +2,7 @@ import '../features/mainpage/models/product_model.dart';
 import '../services/remote/product_apiservice.dart';
 
 class ProductRepository {
-  // Lấy danh sách sản phẩm với phân trang
-  static Future<List<Product>> getProducts({
+  static Future<({List<Product> products, bool hasMore})> getProducts({
     required int page,
     int size = 10,
   }) async {
@@ -13,27 +12,81 @@ class ProductRepository {
         size: size,
       );
 
+      if (response.success) {
+        return (
+          products: response.data,
+          hasMore: response.hasMoreData(size),
+        );
+      }
+
+      return (products: <Product>[], hasMore: false);
+    } catch (e) {
+      print('Lỗi trong ProductRepository.getProducts: $e');
+      return (products: <Product>[], hasMore: false);
+    }
+  }
+
+  // Lấy chi tiết sản phẩm
+  static Future<Product?> getProductDetail({
+    required int productId,
+  }) async {
+    try {
+      final response = await ProductApiService.getProductDetail(
+        productId: productId,
+      );
+
       if (response.success && response.data != null) {
         return response.data!;
       }
 
-      return [];
+      return null;
     } catch (e) {
-      print('Lỗi trong ProductRepository.getProducts: $e');
-      rethrow;
+      print('Lỗi trong ProductRepository.getProductDetail: $e');
+      return null;
     }
   }
 
-  // Tải thêm sản phẩm (wrapper cho getProducts)
-  static Future<List<Product>> loadMoreProducts({
-    required int page,
-    int size = 10,
+  // Cập nhật sản phẩm
+  static Future<Product?> updateProduct({
+    required int productId,
+    required String name,
+    required int price,
+    required int quantity,
+    required String cover,
   }) async {
-    return await getProducts(page: page, size: size);
+    try {
+      final response = await ProductApiService.updateProduct(
+        productId: productId,
+        name: name,
+        price: price,
+        quantity: quantity,
+        cover: cover,
+      );
+
+      if (response.success && response.data != null) {
+        return response.data!;
+      }
+
+      return null;
+    } catch (e) {
+      print('Lỗi trong ProductRepository.updateProduct: $e');
+      return null;
+    }
   }
 
-  // Làm mới danh sách sản phẩm (trang đầu tiên)
-  static Future<List<Product>> refreshProducts({int size = 10}) async {
-    return await getProducts(page: 1, size: size);
+  // Xóa sản phẩm
+  static Future<bool> deleteProduct({
+    required int productId,
+  }) async {
+    try {
+      final response = await ProductApiService.deleteProduct(
+        productId: productId,
+      );
+
+      return response.success;
+    } catch (e) {
+      print('Lỗi trong ProductRepository.deleteProduct: $e');
+      return false;
+    }
   }
 }
