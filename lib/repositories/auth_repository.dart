@@ -39,9 +39,24 @@ class AuthRepository {
     }
   }
 
-  // Đăng xuất
+  // Đăng xuất - xóa hết thông tin đăng nhập
   static Future<void> logout() async {
-    await LoginStorage.clearLoginInfo();
+    try {
+      await LoginStorage.clearAllInfo();
+      print("Đã xóa tất cả thông tin đăng nhập");
+    } catch (e) {
+      print('Lỗi khi đăng xuất: $e');
+    }
+  }
+
+  // Đăng xuất nhưng giữ lại thông tin form để đăng nhập lại
+  static Future<void> logoutKeepForm() async {
+    try {
+      await LoginStorage.clearLoginInfo();
+      print("Đã xóa token, giữ lại thông tin form");
+    } catch (e) {
+      print('Lỗi khi đăng xuất (giữ form): $e');
+    }
   }
 
   // Kiểm tra trạng thái đăng nhập
