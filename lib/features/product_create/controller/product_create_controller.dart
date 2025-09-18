@@ -46,7 +46,6 @@ class ProductCreateController extends GetxController {
       );
 
       if (newProduct != null) {
-        // Thêm sản phẩm mới vào đầu danh sách trong MainPage controller
         try {
           final mainController = Get.find<MainpageController>();
           mainController.addNewProductToList(newProduct);
