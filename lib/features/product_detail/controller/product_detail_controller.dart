@@ -85,8 +85,7 @@ class ProductDetailController extends GetxController {
         _showSuccessDialog(
           "Xóa sản phẩm thành công!",
           onConfirm: () {
-            Get.back(); // Đóng dialog
-            Get.until(ModalRoute.withName('/home')); // Quay về home
+            Get.until(ModalRoute.withName('/home'));
           },
         );
       } else {
