@@ -134,7 +134,7 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                     return 'Đường dẫn ảnh không được để trống';
                   }
                   // Kiểm tra URL đơn giản
-                  final urlPattern = r'^https?://';
+                  const urlPattern = r'^https?://';
                   if (!RegExp(urlPattern).hasMatch(value.trim())) {
                     return 'Đường dẫn ảnh phải bắt đầu với http:// hoặc https://';
                   }
@@ -259,7 +259,7 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
           Navigator.of(context).pop();
         }
       } catch (e) {
-        print('Lỗi khi lưu: $e');
+        debugPrint('Lỗi khi lưu: $e');
         if (mounted) {
           Get.snackbar(
             "Lỗi",

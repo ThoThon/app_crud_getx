@@ -50,7 +50,7 @@ class LoginController extends GetxController {
 
       return success;
     } catch (e) {
-      print('Lỗi login: $e');
+      debugPrint('Lỗi login: $e');
       errorMessage.value = "Thông tin đăng nhập không hợp lệ";
       return false;
     } finally {
@@ -72,7 +72,7 @@ class LoginController extends GetxController {
         _showErrorDialog();
       }
     } catch (e) {
-      print('Lỗi onLoginPressed: $e');
+      debugPrint('Lỗi onLoginPressed: $e');
       _showErrorDialog();
     }
   }

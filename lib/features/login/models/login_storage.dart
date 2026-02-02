@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import 'login_info.dart';
@@ -9,7 +10,7 @@ class LoginStorage {
   static Box<LoginInfo> get _box => Hive.box<LoginInfo>(boxName);
 
   static Future<void> saveLoginInfo(LoginInfo info) async {
-    print("Save token: ${info.token}"); // debug
+    debugPrint("Save token: ${info.token}"); 
 
     await _box.put(keyUserLogin, info);
   }
