@@ -53,7 +53,7 @@ class ProductCreateController extends GetxController {
         _showErrorDialog("Tạo sản phẩm thất bại");
       }
     } catch (e) {
-      print('Lỗi createProduct: $e');
+      debugPrint('Lỗi createProduct: $e');
       errorMessage.value = "Có lỗi xảy ra khi tạo sản phẩm";
       _showErrorDialog("Có lỗi xảy ra khi tạo sản phẩm");
     } finally {

@@ -41,7 +41,7 @@ class ProfileController extends GetxController {
       // Chuyển về màn login và xóa tất cả routes trước đó
       Get.offAllNamed(Routes.login);
     } catch (e) {
-      print('Lỗi logout: $e');
+      debugPrint('Lỗi logout: $e');
       Get.snackbar(
         "Lỗi",
         "Có lỗi xảy ra khi đăng xuất",

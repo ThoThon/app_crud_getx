@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import '../features/login/models/login_info.dart';
 import '../features/login/models/login_storage.dart';
 import '../services/remote/auth_apiservice.dart';
@@ -28,13 +29,13 @@ class AuthRepository {
 
         await LoginStorage.saveLoginInfo(loginInfo);
 
-        print("Token đã lưu: $token");
+        debugPrint("Token đã lưu: $token");
         return true;
       }
 
       return false;
     } catch (e) {
-      print('Lỗi trong AuthRepository.login: $e');
+      debugPrint('Lỗi trong AuthRepository.login: $e');
       return false;
     }
   }
@@ -43,9 +44,9 @@ class AuthRepository {
   static Future<void> logout() async {
     try {
       await LoginStorage.clearAllInfo();
-      print("Đã xóa tất cả thông tin đăng nhập");
+      debugPrint("Đã xóa tất cả thông tin đăng nhập");
     } catch (e) {
-      print('Lỗi khi đăng xuất: $e');
+      debugPrint('Lỗi khi đăng xuất: $e');
     }
   }
 
@@ -53,9 +54,9 @@ class AuthRepository {
   static Future<void> logoutKeepForm() async {
     try {
       await LoginStorage.clearLoginInfo();
-      print("Đã xóa token, giữ lại thông tin form");
+      debugPrint("Đã xóa token, giữ lại thông tin form");
     } catch (e) {
-      print('Lỗi khi đăng xuất (giữ form): $e');
+      debugPrint('Lỗi khi đăng xuất (giữ form): $e');
     }
   }
 

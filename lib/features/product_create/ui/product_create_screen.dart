@@ -115,7 +115,7 @@ class ProductCreateScreen extends GetView<ProductCreateController> {
                       return 'Đường dẫn ảnh không được để trống';
                     }
                     // Kiểm tra URL đơn giản
-                    final urlPattern = r'^https?://';
+                    const urlPattern = r'^https?://';
                     if (!RegExp(urlPattern).hasMatch(value.trim())) {
                       return 'Đường dẫn ảnh phải bắt đầu với http:// hoặc https://';
                     }

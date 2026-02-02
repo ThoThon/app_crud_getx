@@ -57,7 +57,7 @@ class MainpageController extends GetxController {
       // Chỉ cập nhật currentPage khi load thành công
       currentPage = page;
     } catch (e) {
-      print("Lỗi fetchProducts: $e");
+      debugPrint("Lỗi fetchProducts: $e");
       _showErrorSnackbar("Có lỗi xảy ra khi tải dữ liệu");
     } finally {
       if (isLoadMore) {

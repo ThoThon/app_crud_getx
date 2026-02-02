@@ -32,7 +32,7 @@ class ProductDetailController extends GetxController {
         errorMessage.value = "Không tìm thấy thông tin sản phẩm";
       }
     } catch (e) {
-      print('Lỗi fetchProductDetail: $e');
+      debugPrint('Lỗi fetchProductDetail: $e');
       errorMessage.value = "Có lỗi xảy ra khi tải dữ liệu";
     } finally {
       isLoading.value = false;
@@ -63,7 +63,7 @@ class ProductDetailController extends GetxController {
         _showErrorDialog("Cập nhật sản phẩm thất bại");
       }
     } catch (e) {
-      print('Lỗi updateProduct: $e');
+      debugPrint('Lỗi updateProduct: $e');
       _showErrorDialog("Có lỗi xảy ra khi cập nhật sản phẩm");
     } finally {
       isLoading.value = false;
@@ -92,7 +92,7 @@ class ProductDetailController extends GetxController {
         _showErrorDialog("Xóa sản phẩm thất bại");
       }
     } catch (e) {
-      print('Lỗi deleteProduct: $e');
+      debugPrint('Lỗi deleteProduct: $e');
       _showErrorDialog("Có lỗi xảy ra khi xóa sản phẩm");
     } finally {
       isLoading.value = false;

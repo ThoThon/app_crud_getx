@@ -155,17 +155,17 @@ class LoginScreen extends GetView<LoginController> {
           FooterButton(
             svgAsset: 'assets/icons/headphone.svg',
             label: 'Trợ giúp',
-            onTap: () => print('Trợ giúp được bấm'),
+            onTap: () => debugPrint('Trợ giúp được bấm'),
           ),
           FooterButton(
             svgAsset: 'assets/icons/facebook.svg',
             label: 'Group',
-            onTap: () => print('Group được bấm'),
+            onTap: () => debugPrint('Group được bấm'),
           ),
           FooterButton(
             svgAsset: 'assets/icons/search.svg',
             label: 'Tra cứu',
-            onTap: () => print('Tra cứu được bấm'),
+            onTap: () => debugPrint('Tra cứu được bấm'),
           ),
         ],
       ),

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../features/mainpage/models/product_model.dart';
 import '../services/remote/product_apiservice.dart';
 
@@ -21,7 +23,7 @@ class ProductRepository {
 
       return (products: <Product>[], hasMore: false);
     } catch (e) {
-      print('Lỗi trong ProductRepository.getProducts: $e');
+      debugPrint('Lỗi trong ProductRepository.getProducts: $e');
       return (products: <Product>[], hasMore: false);
     }
   }
@@ -41,7 +43,7 @@ class ProductRepository {
 
       return null;
     } catch (e) {
-      print('Lỗi trong ProductRepository.getProductDetail: $e');
+      debugPrint('Lỗi trong ProductRepository.getProductDetail: $e');
       return null;
     }
   }
@@ -67,7 +69,7 @@ class ProductRepository {
 
       return null;
     } catch (e) {
-      print('Lỗi trong ProductRepository.createProduct: $e');
+      debugPrint('Lỗi trong ProductRepository.createProduct: $e');
       return null;
     }
   }
@@ -95,7 +97,7 @@ class ProductRepository {
 
       return null;
     } catch (e) {
-      print('Lỗi trong ProductRepository.updateProduct: $e');
+      debugPrint('Lỗi trong ProductRepository.updateProduct: $e');
       return null;
     }
   }
@@ -111,7 +113,7 @@ class ProductRepository {
 
       return response.success;
     } catch (e) {
-      print('Lỗi trong ProductRepository.deleteProduct: $e');
+      debugPrint('Lỗi trong ProductRepository.deleteProduct: $e');
       return false;
     }
   }
